@@ -37,7 +37,7 @@ class MessageView(APIView):
                 message_object.delete()
 
         except: 
-            deleted_messages = Message.objects.filter()
+            deleted_messages = Message.objects.all()
             serializer = MessageSerializer(deleted_messages, many=True)
             deleted_messages.delete()
 
