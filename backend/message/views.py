@@ -25,6 +25,8 @@ class MessageView(APIView):
     def post(self, request): 
         message_object = Message.objects.create(message=request.data["message"])
         serializer = MessageSerializer(message_object)
+
+        
         print(message_object)
         return Response(serializer.data)
     
