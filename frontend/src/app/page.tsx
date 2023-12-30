@@ -1,5 +1,11 @@
 import Image from "next/image";
-
+import Chat from "./components/Chat";
 export default function Home() {
-  return <div>Main page</div>;
+  return (
+    <div>
+      <div>
+        <Chat />
+      </div>
+    </div>
+  );
 }
