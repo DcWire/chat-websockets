@@ -1,16 +1,17 @@
-"use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import arrow from "../../../public/arrow.svg";
 import { FormEvent } from "react";
-export default function Chat({ sx = {} }) {
-  const [value, setValue] = useState("");
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    setValue("");
-  };
+
+type ChatProps = { onSubmit: any; temp: boolean; value: string; setValue: any };
+
+// This code controls the chat dialog box at the bottom of the screen
+const Chat = ({ onSubmit, temp, value, setValue }: ChatProps) => {
   return (
-    <div className="flex flex-col w-full bg-transparent p-4 pb-0">
+    <div
+      className="flex flex-col w-full bg-transparent p-4 pb-0"
+      key={"chat-main"}
+    >
       <div className="appearance-none w-full px-7 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring focus:ring-blue-500 relative">
         <form onSubmit={onSubmit}>
           <input
@@ -27,4 +28,6 @@ export default function Chat({ sx = {} }) {
       </div>
     </div>
   );
-}
+};
+
+export default Chat;
