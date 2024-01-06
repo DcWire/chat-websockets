@@ -1,10 +1,22 @@
 "use client";
 import Image from "next/image";
-import Chat from "./components/Chat";
 import { FormEvent, useEffect, useState } from "react";
+
+// Components
+import Chat from "./components/Chat";
+import ChatMessages from "./components/ChatMessages";
+
 export default function Home() {
   const [chatHistory, setChatHistory] = useState([""]);
   const [value, setValue] = useState("");
+
+  // When clicking Clear Chat button
+  const onClick = (event: any) => {
+    event.preventDefault();
+    localStorage.setItem("chat-history", JSON.stringify([]));
+    setChatHistory([]);
+  };
+  // When pressing enter on chat
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     const historySTRING = localStorage.getItem("chat-history");
@@ -30,9 +42,19 @@ export default function Home() {
 
   return (
     <div>
-      {chatHistory.map((text, index) => {
-        return <div>{text}</div>;
-      })}
+      <div className="pt-4">
+        <button
+          className="absolute bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          style={{ left: "46%" }}
+          onClick={onClick}
+        >
+          Clear Chat
+        </button>
+      </div>
+
+      <div className="p-10 pb-20">
+        <ChatMessages data={chatHistory} />
+      </div>
       <div className="fixed w-2/4 bottom-0">
         <Chat
           key={"chat"}
