@@ -52,7 +52,7 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="p-10 pb-20">
+      <div className="p-10 pb-20 pt-10">
         <ChatMessages data={chatHistory} />
       </div>
       <div className="fixed w-2/4 bottom-0">
