@@ -7,6 +7,14 @@ export default function Home() {
   //setChatHistory a function that updates the chatHistory whenever new message is added.
   const [chatHistory, setChatHistory] = useState([""]);
   const [value, setValue] = useState("");
+
+  // When clicking Clear Chat button
+  const onClick = (event: any) => {
+    event.preventDefault();
+    localStorage.setItem("chat-history", JSON.stringify([]));
+    setChatHistory([]);
+  };
+  // When pressing enter on chat
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     //Retrieves chat-history from session storage and stores in historySTRING variable
@@ -37,6 +45,15 @@ export default function Home() {
 
   return (
     <div>
+      <div className="pt-4">
+        <button
+          className="absolute bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          style={{ left: "46%" }}
+          onClick={onClick}
+        >
+          Clear Chat
+        </button>
+      </div>
       <div className="p-10 pb-20 pt-10">
         <ChatMessages data={chatHistory} />
       </div>
