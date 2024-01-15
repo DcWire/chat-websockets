@@ -1,9 +1,7 @@
 "use client";
-import Image from "next/image";
 import Chat from "./components/Chat";
 import { FormEvent, useEffect, useState } from "react";
 import ChatMessages from "./components/ChatMessages";
-import { log } from "console";
 export default function Home() {
   // declaring state variable chatHistory to store messages in an ARRAY of strings
   //setChatHistory a function that updates the chatHistory whenever new message is added.
@@ -14,9 +12,8 @@ export default function Home() {
     //Retrieves chat-history from session storage and stores in historySTRING variable
     const historySTRING = localStorage.getItem("chat-history");
     //If historySTRING exists ;
-    console.log(historySTRING);
     if (historySTRING) {
-      const history = JSON.parse(historySTRING); //JSON.parse historySTRING to convert it into array and store in history.
+      const history = JSON.parse(historySTRING);
       if (value.trim() != "") {
         history.push(value); //push the current input value {from user} to history
       }
@@ -37,7 +34,6 @@ export default function Home() {
       setChatHistory(history);
     }
   }, []);
-  function validate({ value }: any) {}
 
   return (
     <div>

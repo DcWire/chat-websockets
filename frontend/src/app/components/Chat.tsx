@@ -1,8 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import arrow from "../../../public/arrow.svg";
-import { FormEvent } from "react";
-
 type ChatProps = { onSubmit: any; temp: boolean; value: string; setValue: any };
 
 // This code controls the chat dialog box at the bottom of the screen
