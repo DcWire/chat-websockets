@@ -4,6 +4,21 @@ from .serializers import MessageSerializer
 from .models import Message
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+def get_message(text):
+    model_name = 'google/flan-t5-base'
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+
+    input_ids = tokenizer(text, return_tensors="pt")
+    output = model.generate(
+    input_ids=input_ids['input_ids'],
+    num_return_sequences=1,  # Generate 3 different outputs
+    )
+    response = tokenizer.decode(output[0], skip_special_tokens=True)
+    return response
 
 # Create your views here.
 # class MessageView(viewsets.ModelViewSet):
@@ -23,12 +38,15 @@ class MessageView(APIView):
         return Response(serializer.data)
     
     def post(self, request): 
-        message_object = Message.objects.create(message=request.data["message"])
-        serializer = MessageSerializer(message_object)
-
+        # message_object = Message.objects.create(message=request.data["message"], type=request.data["type"])
+        # serializer = MessageSerializer(message_object)
         
-        print(message_object)
-        return Response(serializer.data)
+        # print(request.data)
+        # print(message_object)
+        response_text = get_message(request.data["message"])
+        print(response_text)
+        return Response(response_text)
+        # return Response(serializer.data)
     
     def delete(self, request, *args, **kwargs): 
         try: 
