@@ -2,11 +2,18 @@
 import Chat from "./components/Chat";
 import { FormEvent, useEffect, useState } from "react";
 import ChatMessages from "./components/ChatMessages";
+
+// Api functions to post chatmessage request
+import chatmessage from "./api/chatmessage";
+import useApi from "./api/useApi";
+
 export default function Home() {
-  // declaring state variable chatHistory to store messages in an ARRAY of strings
-  //setChatHistory a function that updates the chatHistory whenever new message is added.
-  const [chatHistory, setChatHistory] = useState([""]);
+  // Declaring state variable chatHistory to store messages in an ARRAY of strings
+  // SetChatHistory a function that updates the chatHistory whenever new message is added.
+  const [chatHistory, setChatHistory] = useState([["", 0]]);
   const [value, setValue] = useState("");
+
+  const createNewChatmessage = useApi(chatmessage.createNewChatmessage);
 
   // When clicking Clear Chat button
   const onClick = (event: any) => {
@@ -14,26 +21,47 @@ export default function Home() {
     localStorage.setItem("chat-history", JSON.stringify([]));
     setChatHistory([]);
   };
+
   // When pressing enter on chat
-  const onSubmit = (event: FormEvent) => {
+  const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    //Retrieves chat-history from session storage and stores in historySTRING variable
-    const historySTRING = localStorage.getItem("chat-history");
-    //If historySTRING exists ;
-    if (historySTRING) {
-      const history = JSON.parse(historySTRING);
-      if (value.trim() != "") {
-        history.push(value); //push the current input value {from user} to history
-      }
-      localStorage.setItem("chat-history", JSON.stringify(history)); //sets the local storage with updated value, uses stringify to convert array back to JSON string
-      setChatHistory(history); //Updates the chatHistory state to reflect the stored messages.
-    } else {
-      localStorage.setItem("chat-history", JSON.stringify([value]));
-      setChatHistory([value]);
-    }
+
+    const tempValue = value;
     //clears the input field for next value
     setValue("");
+
+    // Retrieves chat-history from session storage and stores in historySTRING variable
+    const historySTRING = localStorage.getItem("chat-history");
+
+    // If historySTRING exists ;
+    if (historySTRING) {
+      const history = JSON.parse(historySTRING);
+      if (tempValue.trim() != "") {
+        // push the current input value {from user} to history if not empty
+        history.push([tempValue, 0]);
+      }
+      // Sets the local storage with updated value, uses stringify to convert array back to JSON string
+      localStorage.setItem("chat-history", JSON.stringify(history));
+
+      // Updates the chatHistory state to reflect the stored messages.
+      setChatHistory(history);
+    } else {
+      localStorage.setItem("chat-history", JSON.stringify([[tempValue, 0]]));
+      setChatHistory([[tempValue, 0]]);
+    }
+
+    await createNewChatmessage.request(value);
   };
+
+  useEffect(() => {
+    const historySTRING = localStorage.getItem("chat-history");
+    if (historySTRING) {
+      const history = JSON.parse(historySTRING);
+      history.push([createNewChatmessage.data, 1]);
+      localStorage.setItem("chat-history", JSON.stringify(history));
+      setChatHistory(history);
+    }
+  }, [createNewChatmessage.data]);
 
   useEffect(() => {
     const historySTRING = localStorage.getItem("chat-history");
